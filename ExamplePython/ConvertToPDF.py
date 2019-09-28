@@ -1,3 +1,6 @@
+# Command line:
+# - python ConvertToPDF.py <namefile>/.jpg/.png <namefile_pdf (optional)>
+
 import sys
 from PIL import Image
 from fpdf import FPDF
