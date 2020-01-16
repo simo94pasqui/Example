@@ -20,10 +20,10 @@ if len(sys.argv) >= 2:
         if len(pdf_list) < 2:
             pdf += ".pdf"
 
-    if filename_list[1] == "jpg" or filename_list[1] == "jpeg":
+    if filename_list[1] == "jpg" or filename_list[1] == "jpeg" or filename_list[1] == "JPG" or filename_list[1] == "JPEG":
         Image.open(filename).save(pdf, save_all=True)
         print("JPG to PDF Create!")
-    elif filename_list[1] == "png":
+    elif filename_list[1] == "png" or filename_list[1] == "PNG":
         Image.open(filename).convert('RGB').save(pdf, save_all=True)
         print("PNG to PDF Create!")
     else:
