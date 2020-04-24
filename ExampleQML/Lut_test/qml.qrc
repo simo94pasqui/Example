@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>chartDrag.qml</file>
+        <file>chartDrag2.qml</file>
+    </qresource>
+</RCC>
