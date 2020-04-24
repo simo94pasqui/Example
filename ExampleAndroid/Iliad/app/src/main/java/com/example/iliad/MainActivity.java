@@ -2,42 +2,60 @@ package com.example.iliad;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebChromeClient;
+import android.webkit.CookieManager;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebViewDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
     public WebView webb;
-
+    private static final String TAG = "MainActivity";
+    @SuppressLint({"SetJavaScriptEnabled", "WrongViewCast"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        webb = (WebView) findViewById(R.id.webPage);
+        String url = "https://www.iliad.it/account/";
+
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading Data...");
         progressDialog.setCancelable(false);
-        webb = (WebView) findViewById(R.id.webPage);
-        WebSettings webs = webb.getSettings();
-        webs.setJavaScriptEnabled(true);
-        webb.getSettings().setAppCachePath(getApplicationContext().getFilesDir().getAbsolutePath() + "/cache");
-        webb.getSettings().setDatabasePath(getApplicationContext().getFilesDir().getAbsolutePath() + "/databases");
-        webb.loadUrl("https://www.iliad.it/account/");
-        webb.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-        });
 
+        CookieManager.getInstance().setAcceptCookie(true);
+        CookieManager.getInstance().setAcceptThirdPartyCookies(webb, true);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.flush();
+
+        WebSettings webs = webb.getSettings();
+        //webs.setJavaScriptEnabled(true);
+        webs.setAllowFileAccess(true);
+        webs.setSaveFormData(true);
+
+        WebViewDatabase webViewDB = WebViewDatabase.getInstance(getApplicationContext());
+        if (webViewDB != null) {
+            webb.getSettings().setJavaScriptEnabled(true);
+            webb.loadUrl(url);
+        } else {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        }
+
+        //webb.getSettings().setAppCacheEnabled(true);
+        //webb.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        //webb.loadUrl(url);
+        webb.setWebViewClient(new WebViewClient() {});
         webb.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
                 if (progress < 100)
